@@ -1,12 +1,24 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Hello World!</title>
-    <link rel="stylesheet" href="index.css" />
-  </head>
-  <body>
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electron application.</p>
-  </body>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokédex en Electron</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; }
+    .container { display: flex; }
+    #pokemon-list { display: flex; flex-wrap: wrap; width: 50%; justify-content: center; }
+    .pokemon-item { margin: 10px; cursor: pointer; text-align: center; }
+    .pokemon-item img { width: 80px; }
+    #pokemon-details { width: 50%; padding: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Pokédex</h1>
+  <div class="container">
+    <div id="pokemon-list"></div>
+    <div id="pokemon-details"><p>Selecciona un Pokémon</p></div>
+  </div>
+  <script src="renderer.js"></script>
+</body>
 </html>
