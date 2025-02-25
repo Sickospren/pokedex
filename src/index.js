@@ -27,8 +27,14 @@ function createMainWindow() {
 app.whenReady().then(createMainWindow);
 
 function checkAndShowMainWindow() {
-    if (!pokedexWindow && !teamsWindow) {
+    if (!inicioWindow) {
         mainWindow.show();
+    }
+}
+
+function checkAndShowInicioWindow() {
+    if (!pokedexWindow && !teamsWindow) {
+        inicioWindow.show();
     }
 }
 
@@ -47,6 +53,11 @@ ipcMain.on("open-inicio", () => {
 
         inicioWindow.loadFile(path.join(__dirname, "inicio.html"));
         mainWindow.on("closed", () => (mainWindow = null));
+
+        inicioWindow.on("closed", () => {
+            inicioWindow = null;
+            checkAndShowMainWindow(); // Si no hay ventanas abiertas, mostrar el login
+        });
 
         mainWindow.hide(); // Ocultar el Inicio
     }
@@ -69,7 +80,7 @@ ipcMain.on("open-pokedex", () => {
 
         pokedexWindow.on("closed", () => {
             pokedexWindow = null;
-            checkAndShowMainWindow(); // Si no hay ventanas abiertas, mostrar el Inicio
+            checkAndShowInicioWindow(); // Si no hay ventanas abiertas, mostrar el Inicio
         });
 
         mainWindow.hide(); // Ocultar el Inicio
@@ -93,7 +104,7 @@ ipcMain.on("open-teams", () => {
 
         teamsWindow.on("closed", () => {
             teamsWindow = null;
-            checkAndShowMainWindow(); // Si no hay ventanas abiertas, mostrar el Inicio
+            checkAndShowInicioWindow(); // Si no hay ventanas abiertas, mostrar el Inicio
         });
 
         mainWindow.hide(); // Ocultar el Inicio
