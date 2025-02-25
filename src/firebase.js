@@ -1,0 +1,7 @@
+
+function comprobarLogin(){
+    
+}
+function registrarUsuario(){
+
+}

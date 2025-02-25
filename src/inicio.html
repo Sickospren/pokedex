@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Principal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            gap: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="h1">Bienvenido</h1>
+    <button id="open-pokedex">Ir a la Pokédex</button>
+    <button id="open-teams">Gestión de Equipos</button>
+
+    <script>
+        window.electronAPI.onSetUsername((user) => {
+            const h1 = document.getElementById("h1");
+            h1.textContent = `Bienvenido, ${user}`;
+        });
+
+        document.getElementById("open-pokedex").addEventListener("click", () => {
+            window.electronAPI.openPokedex();
+        });
+
+        document.getElementById("open-teams").addEventListener("click", () => {
+            window.electronAPI.openTeams();
+        });
+    </script>
+</body>
+</html>

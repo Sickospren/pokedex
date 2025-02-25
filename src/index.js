@@ -3,6 +3,7 @@ const path = require("path");
 const axios = require("axios");
 
 let mainWindow;
+let inicioWindow;
 let pokedexWindow;
 let teamsWindow;
 let detailsWindow;
@@ -29,6 +30,35 @@ function checkAndShowMainWindow() {
         mainWindow.show();
     }
 }
+
+//Abrir Inicio y ocultar index
+ipcMain.on("open-inicio", (user) => {
+    if (!inicioWindow) {
+        inicioWindow = new BrowserWindow({
+            width: 800,
+            height: 600,
+            webPreferences: {
+                preload: path.join(__dirname, "preload.js"),
+                contextIsolation: true,
+                nodeIntegration: false,
+            },
+        });
+
+        inicioWindow.loadFile(path.join(__dirname, "inicio.html"));
+
+        pokedexWindow.webContents.on('did-finish-load', () => {
+            // Pasar el nombre de usuario a la ventana de inicio
+            pokedexWindow.webContents.send('set-username', user);
+          });
+
+        inicioWindow.on("closed", () => {
+            inicioWindow = null;
+            checkAndShowMainWindow(); // Si no hay ventanas abiertas, mostrar el Inicio
+        });
+
+        mainWindow.hide(); // Ocultar el Inicio
+    }
+});
 
 //Abrir Pokédex y ocultar Inicio
 ipcMain.on("open-pokedex", () => {

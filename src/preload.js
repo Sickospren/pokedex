@@ -9,6 +9,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   closeDetailsWindow: () => ipcRenderer.send("close-details-window"),
   onPokemonData: (callback) => ipcRenderer.on("pokemon-data", (_, data) => callback(data)),
 
+  openInicio: () => ipcRenderer.send("open-inicio", user),
+  onSetUsername: (callback) => ipcRenderer.on('set-username', (event, username) => callback(username)),
   openPokedex: () => ipcRenderer.send("open-pokedex"),
   openTeams: () => ipcRenderer.send("open-teams"),
   closeTeamsWindow: () => ipcRenderer.send("close-teams-window"),
