@@ -106,8 +106,14 @@ function añadirPokemonEquipo(pokeId, nombre, imagen) {
 }
 
 document.getElementById("btnGuardarEquipo").addEventListener("click", () => {
-   // Crear un nuevo JSON a partir de equipoJSON, eliminando la propiedad 'imagen'
-   let equipoUserJSON = equipoJSON.map(equipo => {
+  // Comprobar que equipoJSON tenga 6 elementos
+  if (equipoJSON.length !== 6) {
+    console.log(`⚠️ El equipo debe de tener 6 pokemons. Numero de pokemons actual: ${equipoJSON.length}`);
+    return;
+  }
+
+  // Crear un nuevo JSON a partir de equipoJSON, eliminando la propiedad 'imagen'
+  let equipoUserJSON = equipoJSON.map(equipo => {
     // Crear una copia del objeto equipo sin la propiedad 'imagen'
     let { imagen, ...equipoSinImagen } = equipo;
     return equipoSinImagen;
@@ -115,8 +121,8 @@ document.getElementById("btnGuardarEquipo").addEventListener("click", () => {
 
   // Obtener el usuario de la sesión
   const user = localStorage.getItem('username');
-  console.log("Equipo del usuario "+ user + ":");
+  console.log("Equipo del usuario " + user + ":");
   console.table(equipoUserJSON);
 
-  
+
 });
