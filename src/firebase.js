@@ -178,4 +178,4 @@ async function eliminarEquipo(ids, user) {
 }
 
 
-module.exports = { comprobarLogin, registrarUsuario, annadirEquipo, borrarEquipo };
+module.exports = { comprobarLogin, registrarUsuario, annadirEquipo, eliminarEquipo };

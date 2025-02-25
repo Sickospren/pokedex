@@ -33,7 +33,7 @@ function renderPokemonList(pokemonList) {
 
     añadirBtn.addEventListener("click", (event) => {
       event.stopPropagation();
-      añadirPokemonEquipo(nombrePokemon, srcImagen);
+      añadirPokemonEquipo(pokeId, nombrePokemon, srcImagen);
     });
 
     // Agregar evento para abrir detalles
@@ -67,6 +67,6 @@ document.getElementById("close-pokedex").addEventListener("click", () => {
 // Cargar Pokémon al inicio
 document.addEventListener("DOMContentLoaded", loadPokemonList);
 
-function añadirPokemonEquipo(nombre, imagen) {
-  console.log("Nombre del pokemon: " + nombre + " Imagen: " + imagen);
+function añadirPokemonEquipo(pokeId, nombre, imagen) {
+  console.log("Id: "+ pokeId +" Nombre del pokemon: " + nombre + " Imagen: " + imagen);
 }
