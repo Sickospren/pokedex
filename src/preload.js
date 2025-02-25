@@ -9,7 +9,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   closeDetailsWindow: () => ipcRenderer.send("close-details-window"),
   onPokemonData: (callback) => ipcRenderer.on("pokemon-data", (_, data) => callback(data)),
 
-  // 🔹 Funciones para cambiar entre ventanas
   openPokedex: () => ipcRenderer.send("open-pokedex"),
   openTeams: () => ipcRenderer.send("open-teams"),
   closeTeamsWindow: () => ipcRenderer.send("close-teams-window"),

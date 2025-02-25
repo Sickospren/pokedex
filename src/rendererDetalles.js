@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
       <p>Habilidades: ${data.abilities.map(a => a.ability.name).join(", ")}</p>
     `;
 
-    // Agregar evento al botón
     document.getElementById("close-details").addEventListener("click", () => {
       window.electronAPI.closeDetailsWindow();
     });

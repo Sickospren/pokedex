@@ -30,7 +30,7 @@ function checkAndShowMainWindow() {
     }
 }
 
-// 🔹 Abrir Pokédex y ocultar Inicio
+//Abrir Pokédex y ocultar Inicio
 ipcMain.on("open-pokedex", () => {
     if (!pokedexWindow) {
         pokedexWindow = new BrowserWindow({
@@ -54,7 +54,7 @@ ipcMain.on("open-pokedex", () => {
     }
 });
 
-// 🔹 Abrir Gestión de Equipos y ocultar Inicio
+//Abrir Gestión de Equipos y ocultar Inicio
 ipcMain.on("open-teams", () => {
     if (!teamsWindow) {
         teamsWindow = new BrowserWindow({
@@ -78,14 +78,14 @@ ipcMain.on("open-teams", () => {
     }
 });
 
-// 🔹 Cerrar Gestión de Equipos
+//Cerrar Gestión de Equipos
 ipcMain.on("close-teams-window", () => {
     if (teamsWindow) {
         teamsWindow.close();
     }
 });
 
-// 🔹 Obtener la lista de Pokémon
+//Obtener la lista de Pokémon
 ipcMain.handle("fetch-pokemon-list", async () => {
     try {
         const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=151");
@@ -96,7 +96,7 @@ ipcMain.handle("fetch-pokemon-list", async () => {
     }
 });
 
-// 🔹 Obtener detalles de un Pokémon
+//Obtener detalles de un Pokémon
 ipcMain.handle("fetch-pokemon-details", async (_, pokemon) => {
     try {
         const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
@@ -106,7 +106,7 @@ ipcMain.handle("fetch-pokemon-details", async (_, pokemon) => {
     }
 });
 
-// 🔹 Abrir ventana de detalles del Pokémon
+//Abrir ventana de detalles del Pokémon
 ipcMain.on("open-details-window", async (_, pokemon) => {
     try {
         const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
@@ -115,7 +115,7 @@ ipcMain.on("open-details-window", async (_, pokemon) => {
         openDetailsWindow({ error: "No se encontró el Pokémon" });
     }
 
-    // Ocultar la Pokédex si está abierta
+    //Ocultar la Pokédex si está abierta
     if (pokedexWindow) {
         pokedexWindow.hide();
     }
@@ -150,21 +150,21 @@ function openDetailsWindow(pokemonData) {
     }
 }
 
-// 🔹 Cerrar ventana de detalles
+//Cerrar ventana de detalles
 ipcMain.on("close-details-window", () => {
     if (detailsWindow) {
         detailsWindow.close();
     }
 });
 
-// Cerrar ventana de pokedex
+//Cerrar ventana de pokedex
 ipcMain.on("close-pokedex-window", () => {
     if (pokedexWindow) {
         pokedexWindow.close();
     }
 });
 
-// 🔹 Cerrar la app cuando no hay ventanas abiertas (excepto en macOS)
+//Cerrar la app cuando no hay ventanas abiertas (excepto en macOS)
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
         app.quit();
