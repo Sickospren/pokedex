@@ -124,5 +124,8 @@ document.getElementById("btnGuardarEquipo").addEventListener("click", () => {
   console.log("Equipo del usuario " + user + ":");
   console.table(equipoUserJSON);
 
-
+  // Añadir equipo en firebase
+  window.electronAPI.annadirEquipo(equipoUserJSON, user);
+  // cerrar la ventana de pokedex
+  window.electronAPI.closePokedexWindow();
 });
