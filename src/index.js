@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
-const { comprobarLogin, registrarUsuario} = require("./firebase");
+const { comprobarLogin, registrarUsuario, annadirEquipo, eliminarEquipo, obtenerEquiposDeUsuario } = require("./firebase");
 const path = require("path");
 const axios = require("axios");
 
@@ -158,6 +158,34 @@ ipcMain.handle("registrar-usuario", async (_, user, pass) => {
         return result;
     } catch (error) {
         return { error: "Fallo en el registro en index" };
+    }
+});
+
+ipcMain.handle("obtener-equipos", async (_, user) => {
+    try {
+        const result = await obtenerEquiposDeUsuario(user);
+        return result;
+    } catch (error) {
+        return { error: "Fallo al obtener los equipos" };
+    }
+});
+
+ipcMain.handle("annadir-equipo", async (_, pokemonArray, user) => {
+    console.log("INDEX")
+    try {
+        const result = await annadirEquipo(pokemonArray, user);
+        return result;
+    } catch (error) {
+        return { error: "Fallo al guardar el equipo" };
+    }
+});
+
+ipcMain.handle("eliminar-equipo", async (_, docId) => {
+    try {
+        const result = await eliminarEquipo(docId);
+        return result;
+    } catch (error) {
+        return { error: "Fallo al eliminar el equipo" };
     }
 });
 

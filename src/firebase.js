@@ -1,5 +1,5 @@
 const { initializeApp } = require("firebase/app");
-const { getFirestore, collection, getDocs, query, where, setDoc, doc, getDoc, deleteDoc, updateDoc } = require("firebase/firestore");
+const { getFirestore, collection, getDocs, query, where, setDoc, doc, getDoc, deleteDoc, updateDoc, addDoc } = require("firebase/firestore");
 const bcrypt = require("bcryptjs");
 
 /*
@@ -78,104 +78,56 @@ async function registrarUsuario(nombre_usuario, contrasena) {
     }
 }
 
-async function comprobarEquipoExistente(ids, user) {
+async function annadirEquipo(pokemonArray, user) {
+    console.log("FIREBASE")
     const db = getFirestore(firebaseApp);
-    const equiposRef = collection(db, "equipo");
-    try {
-        // Buscar todos los equipos del usuario
-        const q = query(equiposRef, where("username", "==", user));
-        const querySnapshot = await getDocs(q);
-        // Comprobar si ya existe un equipo con los mismos IDs (sin importar el orden)
-        for (const docSnapshot of querySnapshot.docs) {
-            const equipoData = docSnapshot.data();
-            const equipoIds = [
-                equipoData.poke1,
-                equipoData.poke2,
-                equipoData.poke3,
-                equipoData.poke4,
-                equipoData.poke5,
-                equipoData.poke6
-            ];
-            // Ordenamos ambos arrays de IDs para compararlos sin importar el orden
-            const idsOrdenados = [...ids].sort((a, b) => a - b);
-            const equipoIdsOrdenados = [...equipoIds].sort((a, b) => a - b);
-
-            if (JSON.stringify(idsOrdenados) === JSON.stringify(equipoIdsOrdenados)) {
-                console.log("Ya existe un equipo igual para este usuario.");
-                return false;
-            }
-        }
-        console.log("No existe un equipo igual para este usuario.");
-        return true;
-    } catch (error) {
-        console.error("Error al comprobar si el equipo existe:", error);
-        return false;
-    }
-}
-
-async function annadirEquipo(ids, user) {
-    const equipoExistente = await comprobarEquipoExistente(ids, user);
-
-    if (!equipoExistente) {
-        console.log("No se puede añadir el equipo porque ya existe uno igual.");
-        return false;
-    }
-    const db = getFirestore(firebaseApp);
-    const equiposRef = collection(db, "equipo");
+    const equiposRef = collection(db, "equipos");
     try {
         const equipoData = {
-            poke1: ids[0],
-            poke2: ids[1],
-            poke3: ids[2],
-            poke4: ids[3],
-            poke5: ids[4],
-            poke6: ids[5],
-            username: user
+            equipo: pokemonArray,
+            usuario: user
         };
-        await setDoc(doc(equiposRef), equipoData);
-        console.log("Equipo añadido exitosamente.");
+        const docRef = await addDoc(equiposRef, equipoData);
+        console.log("Equipo añadido exitosamente con ID: ", docRef.id);
         return true;
     } catch (error) {
-        console.error("Error al añadir el equipo:", error);
+        console.error("Error al añadir equipo:", error);
         return false;
     }
 }
 
-async function eliminarEquipo(ids, user) {
+
+
+async function eliminarEquipo(docId) {
     const db = getFirestore(firebaseApp);
-    const equiposRef = collection(db, "equipo");
+    const equipoDocRef = doc(db, "equipos", docId);
     try {
-        // Buscar todos los equipos del usuario
-        const q = query(equiposRef, where("username", "==", user));
-        const querySnapshot = await getDocs(q);
-        // Recorrer los documentos para encontrar el que coincide con los IDs
-        for (const docSnapshot of querySnapshot.docs) {
-            const equipoData = docSnapshot.data();
-            const equipoIds = [
-                equipoData.poke1,
-                equipoData.poke2,
-                equipoData.poke3,
-                equipoData.poke4,
-                equipoData.poke5,
-                equipoData.poke6
-            ];
-            // Ordenamos ambos arrays de IDs para compararlos sin importar el orden
-            const idsOrdenados = [...ids].sort((a, b) => a - b);
-            const equipoIdsOrdenados = [...equipoIds].sort((a, b) => a - b);
-            if (JSON.stringify(idsOrdenados) === JSON.stringify(equipoIdsOrdenados)) {
-                // Eliminar el documento
-                await deleteDoc(docSnapshot.ref);
-                console.log("Equipo eliminado exitosamente.");
-                return true;
-            }
-        }
-        console.log("No se encontró un equipo igual para este usuario.");
-        return false;
+        await deleteDoc(equipoDocRef);
+        console.log("Equipo eliminado exitosamente.");
+        return true;
     } catch (error) {
         console.error("Error al eliminar el equipo:", error);
         return false;
     }
 }
 
+async function obtenerEquiposDeUsuario(user) {
+    const db = getFirestore(firebaseApp);
+    const equiposRef = collection(db, "equipos");
+    try {
+        const q = query(equiposRef, where("usuario", "==", user));
+        const querySnapshot = await getDocs(q);
+        const equipos = {};
+        querySnapshot.forEach((docSnapshot) => {
+            const equipoData = docSnapshot.data().equipo;
+            equipos[docSnapshot.id] = equipoData;
+        });
 
-module.exports = { comprobarLogin, registrarUsuario, annadirEquipo, eliminarEquipo };
+        return equipos;
+    } catch (error) {
+        console.error("Error al obtener los equipos:", error);
+        return {};
+    }
+}
+
+module.exports = { comprobarLogin, registrarUsuario, annadirEquipo, eliminarEquipo, obtenerEquiposDeUsuario };

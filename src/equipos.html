@@ -4,15 +4,148 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Equipos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #2d3e50, #4f6877);
+            color: #e6e6e6;
+            font-size: 16px;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #f9f9f9;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+        }
+        #back {
+            background-color: #f39c12;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        #back:hover {
+            background-color: #e67e22;
+            transform: scale(1.05);
+        }
+        #equiposTabla {
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 40px;
+            overflow-x: auto;
+            border-radius: 15px;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1rem;
+        }
+        th, td {
+            padding: 16px 24px;
+            text-align: center;
+        }
+        th {
+            background-color: #34495e;
+            color: #fff;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        td {
+            background-color: #f8f8f8;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            border-left: 1px solid #ddd;
+            transition: background-color 0.3s ease;
+        }    
+        td:hover {
+            background-color: #e3e3e3;
+        }
+        img {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+            border-radius: 5px;
+            transition: transform 0.2s ease;
+        }
+        img:hover {
+            transform: scale(1.2);
+        }
+        p {
+            font-size: 14px;
+            color: #555;
+            margin-top: 8px;
+            text-transform: capitalize;
+        }
+        .delete-button {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .delete-button:hover {
+            background-color: #c0392b;
+            transform: scale(1.1);
+        }
+        .no-data-message {
+            font-size: 1.2rem;
+            color: #888;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .loading {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 1.5rem;
+            color: #f39c12;
+            font-weight: 600;
+            animation: blink 1.5s infinite ease-in-out;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+    
 </head>
 <body>
     <h1>Gestión de Equipos</h1>
     <button id="back">Volver al Inicio</button>
-
+    <div id="equiposTabla"></div>
     <script>
         document.getElementById("back").addEventListener("click", () => {
             window.electronAPI.closeTeamsWindow();
         });
     </script>
+    <script type="module" src="./renders/rendererEquipos.js"></script>
 </body>
 </html>
