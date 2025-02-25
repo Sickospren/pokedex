@@ -18,6 +18,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   openStats: () => ipcRenderer.send("open-stats"),
   closeTeamsWindow: () => ipcRenderer.send("close-teams-window"),
   closePokedexWindow: () => ipcRenderer.send("close-pokedex-window"),
-  fetchStats: () => ipcRenderer.invoke("fetch-stats"),
 
+  obtenerTop3Pokemons: (username) => ipcRenderer.invoke("obtener-top3-jugador", username),
+  obtenerTiposUsuario: (username) => ipcRenderer.invoke("obtener-tipos-jugador", username),
+  obtenerTipos151: () => ipcRenderer.invoke("obtener-tipos-151"),
 });

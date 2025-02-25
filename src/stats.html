@@ -1,14 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #ff5733;
+            text-transform: uppercase;
+            font-size: 24px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #ff5733, #ff914d);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #ff914d, #ff5733);
+            transform: scale(1.05);
+        }
+
+        #contenedorDatos {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background: white;
+            display: none;
+            /* Se oculta al inicio */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        #contenedorDatos.mostrar {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #ffeadb;
+            margin: 5px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #ff5733;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        td {
+            background: #fff5f0;
+        }
+
+        tr:nth-child(even) td {
+            background: #ffe0cc;
+        }
+    </style>
 </head>
+
 <body>
     <p>VENTANA ESTADISTICAS</p>
-    <div id="stats-container"></div>
-    <script type="module" src="./renders/statsRenderer.js"></script>
+    <button id="btn151">Obtener datos de los primeros 151</button>
+    <button id="btnTop3">Obtener Top 3 Pokémon</button>
+    <button id="btnTipos">Obtener Tipos más usados</button>
+    <div id="contenedorDatos"></div>
+    <script type="module" src="./renders/rendererStats.js"></script>
 
 </body>
+
 </html>

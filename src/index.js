@@ -3,6 +3,8 @@ const { comprobarLogin, registrarUsuario, annadirEquipo, eliminarEquipo, obtener
 const path = require("path");
 const axios = require("axios");
 const dataForge = require("data-forge");
+const { DataFrame } = dataForge;
+
 
 let mainWindow;
 let inicioWindow;
@@ -222,7 +224,7 @@ function openDetailsWindow(pokemonData) {
 
         detailsWindow.on("closed", () => {
             detailsWindow = null;
-            
+
             // Mostrar la Pokédex de nuevo si estaba oculta
             if (pokedexWindow) {
                 pokedexWindow.show();
@@ -269,8 +271,8 @@ ipcMain.on("open-stats", () => {
                 nodeIntegration: false,
             },
         });
-
         statsWindow.loadFile(path.join(__dirname, "stats.html"));
+        statsWindow.webContents.openDevTools();
 
         statsWindow.on("closed", () => {
             statsWindow = null;
@@ -281,41 +283,172 @@ ipcMain.on("open-stats", () => {
     }
 });
 
-ipcMain.handle("fetch-stats", async () => {
+ipcMain.handle("obtener-tipos-151", async () => {
+    const tiposPosibles = [
+        "normal", "fire", "water", "electric", "grass", "ice",
+        "fighting", "poison", "ground", "flying", "psychic",
+        "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"
+    ];
+
+    const obtenerDatosPokemon = async (id) => {
+        try {
+            const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
+            return {
+                id: response.data.id,
+                nombre: response.data.name.toUpperCase(),
+                tipos: response.data.types.map(t => t.type.name),
+            };
+        } catch (error) {
+            console.error(`Error al obtener datos de ${id}:`, error.message);
+            return null;
+        }
+    };
+
+    const datosPokemons = [];
+    for (let i = 1; i <= 151; i++) {
+        const datos = await obtenerDatosPokemon(i);
+        if (datos) datosPokemons.push(datos);
+    }
+
+    const df = new DataFrame(datosPokemons);
+
+    // Contar Pokémon por tipo
+    const tiposExpandidos = df
+        .selectMany(row => row.tipos.map(tipo => ({ tipo })))
+        .groupBy(row => row.tipo)
+        .select(group => ({
+            tipo: group.first().tipo,
+            cantidad: group.count()
+        }))
+        .toArray();
+
+    // Crear objeto con todos los tipos inicializados en 0
+    const conteoTipos = Object.fromEntries(tiposPosibles.map(tipo => [tipo, 0]));
+
+    for (const tipoData of tiposExpandidos) {
+        conteoTipos[tipoData.tipo] = tipoData.cantidad;
+    }
+
+    return Object.entries(conteoTipos).map(([tipo, cantidad]) => ({ tipo, cantidad }));
+});
+
+ipcMain.handle("obtener-top3-jugador", async (_, username) => {
     try {
-        const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=151");
-        const pokemons = response.data.results;
+        const equipos = await obtenerEquiposDeUsuario(username);
+        if (!equipos || Object.keys(equipos).length === 0) {
+            return { error: "El usuario no tiene equipos registrados." };
+        }
 
-        // Obtener detalles de cada Pokémon
-        const pokemonDetalles = await Promise.all(
-            pokemons.map(async (pokemon) => {
-                const res = await axios.get(pokemon.url);
-                return res.data;
-            })
-        );
+        const pokemonList = Object.values(equipos).flat();
 
-        // Extraer tipos de cada Pokémon
-        const tipos = pokemonDetalles.flatMap(poke =>
-            poke.types.map(t => t.type.name)
-        );
+        if (pokemonList.length === 0) {
+            return { error: "El usuario no tiene Pokémon en sus equipos." };
+        }
 
-        // Crear un DataFrame y contar por tipo
-        const df = new dataForge.DataFrame({ values: tipos });
-        const conteoTipos = df.groupBy(tipo => tipo)
+        // Función para obtener datos de la PokéAPI
+        const obtenerDatosPokemon = async (id) => {
+            try {
+                const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
+                return {
+                    id: response.data.id,
+                    nombre: response.data.name.toUpperCase(),
+                    tipos: response.data.types.map(t => t.type.name),
+                };
+            } catch (error) {
+                console.error(`Error al obtener datos de ${id}:`, error.message);
+                return null;
+            }
+        };
+
+        // Obtener datos de los Pokémon en paralelo
+        const datosPokemons = (await Promise.all(pokemonList.map(p => obtenerDatosPokemon(p.id))))
+            .filter(pokemon => pokemon !== null); // Filtrar posibles `null`
+
+        if (datosPokemons.length === 0) {
+            return { error: "No se pudieron obtener datos de los Pokémon." };
+        }
+
+        // Convertir en DataFrame
+        const df = new DataFrame(datosPokemons);
+
+        // Contar los Pokémon más repetidos
+        const conteoPokemons = df.groupBy(row => row.nombre)
             .select(group => ({
-                tipo: group.first(),
-                cantidad: group.count(),
+                nombre: group.first().nombre,
+                cantidad: group.count()
             }))
-            .inflate();
+            .orderByDescending(row => row.cantidad)
+            .toArray();
 
-        return conteoTipos.toArray();
+        if (conteoPokemons.length === 0) {
+            return { error: "No hay datos suficientes para calcular el top 3." };
+        }
+
+        // Obtener el top 3 (o menos si hay menos de 3 Pokémon en la lista)
+        return conteoPokemons.slice(0, 3);
+
     } catch (error) {
-        console.error("Error al obtener estadísticas:", error);
-        return { error: "No se pudieron calcular las estadísticas." };
+        console.error("Error en obtener-top3-jugador:", error);
+        return { error: "Fallo al obtener los equipos" };
     }
 });
 
-ipcMain.handle("fetch-stats-usuario", async (_,user) => {
-    const result = await obtenerEquiposDeUsuario(user);
-    
+ipcMain.handle("obtener-tipos-jugador", async (_, username) => {
+    const tiposPosibles = [
+        "normal", "fire", "water", "electric", "grass", "ice",
+        "fighting", "poison", "ground", "flying", "psychic",
+        "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"
+    ];
+
+    const equipos = await obtenerEquiposDeUsuario(username);
+
+    // Extraer todos los Pokémon de todos los equipos
+    const pokemonList = Object.values(equipos).flat();
+
+    // Función para obtener datos de la PokéAPI
+    const obtenerDatosPokemon = async (id) => {
+        try {
+            const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
+            return {
+                id: response.data.id,
+                nombre: response.data.name.toUpperCase(),
+                tipos: response.data.types.map(t => t.type.name), // Ahora es un array de strings
+            };
+        } catch (error) {
+            console.error(`Error al obtener datos de ${id}:`, error.message);
+            return null;
+        }
+    };
+
+    // Obtener datos de los Pokémon uno por uno
+    const datosPokemons = [];
+    for (let i = 0; i < pokemonList.length; i++) {
+        const datos = await obtenerDatosPokemon(pokemonList[i].id);
+        if (datos) {
+            datosPokemons.push(datos);
+        }
+    }
+
+    const df = new DataFrame(datosPokemons);
+    const tiposExpandidos = df
+        .selectMany(row => row.tipos.map(tipo => ({ tipo }))) // Separa los tipos en filas individuales
+        .groupBy(row => row.tipo)
+        .select(group => ({
+            tipo: group.first().tipo,
+            cantidad: group.count()
+        }))
+        .toArray();
+
+    // Se crea un objeto donde cada tipo empieza con 0.
+    const conteoTipos = Object.fromEntries(tiposPosibles.map(tipo => [tipo, 0]));
+
+    // Llenar el conteo con los datos reales
+    for (const tipoData of tiposExpandidos) {
+        conteoTipos[tipoData.tipo] = tipoData.cantidad;
+    }
+
+    // Convertir a array para mostrarlo en formato tabla
+    const tiposFinal = Object.entries(conteoTipos).map(([tipo, cantidad]) => ({ tipo, cantidad }));
+    return tiposFinal;
+
 });
