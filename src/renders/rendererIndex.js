@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Función para iniciar sesión
     async function iniciarSesion(event) {
+
         event.preventDefault();
         console.log("Intentando iniciar sesión...");
         const user = loginUser.value.trim();
