@@ -1,45 +1,55 @@
-const { ipcRenderer } = require("electron");
+let allPokemon = []; // Guardamos la lista completa para filtrar después
 
+// Cargar la lista de Pokémon
 async function loadPokemonList() {
-  const pokemonList = await ipcRenderer.invoke("fetch-pokemon-list");
+  allPokemon = await window.electronAPI.fetchPokemonList(); // Guardamos la lista original
+  renderPokemonList(allPokemon); // Mostramos todos al inicio
+}
+
+// Renderizar la lista de Pokémon
+function renderPokemonList(pokemonList) {
   const listContainer = document.getElementById("pokemon-list");
+  listContainer.innerHTML = ""; // Limpiar lista
 
-  if (pokemonList.error) {
-    listContainer.innerHTML = `<p>Error: ${pokemonList.error}</p>`;
-    return;
-  }
-
-  listContainer.innerHTML = "";
   for (let pokemon of pokemonList) {
-    const pokeId = pokemon.url.split("/").slice(-2, -1)[0]; // Extrae el ID del URL
+    const pokeId = pokemon.url.split("/").slice(-2, -1)[0]; // Extrae el ID
     const listItem = document.createElement("div");
     listItem.classList.add("pokemon-item");
-    listItem.innerHTML = `
-      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeId}.png" alt="${pokemon.name}">
-      <p>${pokemon.name.toUpperCase()}</p>
-    `;
-    listItem.addEventListener("click", () => loadPokemonDetails(pokemon.name));
+
+    // Crear imagen
+    const image = document.createElement("img");
+    image.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeId}.png`;
+    image.alt = pokemon.name;
+
+    // Nombre del Pokémon
+    const nameTag = document.createElement("p");
+    nameTag.textContent = pokemon.name.toUpperCase();
+
+    // Agregar evento para abrir detalles
+    listItem.addEventListener("click", () => {
+      console.log("Abriendo detalles de:", pokemon.name);
+      window.electronAPI.openDetailsWindow(pokemon.name);
+    });
+
+    listItem.appendChild(image);
+    listItem.appendChild(nameTag);
     listContainer.appendChild(listItem);
   }
 }
 
-async function loadPokemonDetails(pokemon) {
-  const data = await ipcRenderer.invoke("fetch-pokemon-details", pokemon);
-  const detailsContainer = document.getElementById("pokemon-details");
+// Filtro
+document.getElementById("search").addEventListener("input", (event) => {
+  const searchTerm = event.target.value.toLowerCase();
+  const filteredPokemon = allPokemon.filter((p) =>
+    p.name.toLowerCase().includes(searchTerm)
+  );
+  renderPokemonList(filteredPokemon);
+});
 
-  if (data.error) {
-    detailsContainer.innerHTML = `<p>${data.error}</p>`;
-    return;
-  }
+//boton para cerrar la pokedex
+document.getElementById("close-pokedex").addEventListener("click", () => {
+  window.electronAPI.closePokedexWindow();
+});
 
-  detailsContainer.innerHTML = `
-    <h2>${data.name.toUpperCase()}</h2>
-    <img src="${data.sprites.front_default}" alt="${data.name}">
-    <p>Altura: ${data.height} dm</p>
-    <p>Peso: ${data.weight} hg</p>
-    <p>Tipo(s): ${data.types.map(t => t.type.name).join(", ")}</p>
-    <p>Habilidades: ${data.abilities.map(a => a.ability.name).join(", ")}</p>
-  `;
-}
-
+// Cargar Pokémon al inicio
 document.addEventListener("DOMContentLoaded", loadPokemonList);
