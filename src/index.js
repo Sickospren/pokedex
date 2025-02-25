@@ -2,12 +2,14 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const { comprobarLogin, registrarUsuario} = require("./firebase");
 const path = require("path");
 const axios = require("axios");
+const dataForge = require("data-forge");
 
 let mainWindow;
 let inicioWindow;
 let pokedexWindow;
 let teamsWindow;
 let detailsWindow;
+let statsWindow;
 
 const width = 1000;
 const height = 700;
@@ -223,5 +225,64 @@ ipcMain.on("close-pokedex-window", () => {
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
         app.quit();
+    }
+});
+
+//-------------ESTADISTICAS-------------
+//ventana para las estadisticas
+ipcMain.on("open-stats", () => {
+    if (!statsWindow) {
+        statsWindow = new BrowserWindow({
+            width: width,
+            height: height,
+            webPreferences: {
+                preload: path.join(__dirname, "preload.js"),
+                contextIsolation: true,
+                nodeIntegration: false,
+            },
+        });
+
+        statsWindow.loadFile(path.join(__dirname, "stats.html"));
+
+        statsWindow.on("closed", () => {
+            statsWindow = null;
+            checkAndShowInicioWindow(); // Si no hay ventanas abiertas, mostrar el Inicio
+        });
+
+        mainWindow.hide(); // Ocultar el Inicio
+    }
+});
+
+ipcMain.handle("fetch-stats", async () => {
+    try {
+        const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=151");
+        const pokemons = response.data.results;
+
+        // Obtener detalles de cada Pokémon
+        const pokemonDetalles = await Promise.all(
+            pokemons.map(async (pokemon) => {
+                const res = await axios.get(pokemon.url);
+                return res.data;
+            })
+        );
+
+        // Extraer tipos de cada Pokémon
+        const tipos = pokemonDetalles.flatMap(poke =>
+            poke.types.map(t => t.type.name)
+        );
+
+        // Crear un DataFrame y contar por tipo
+        const df = new dataForge.DataFrame({ values: tipos });
+        const conteoTipos = df.groupBy(tipo => tipo)
+            .select(group => ({
+                tipo: group.first(),
+                cantidad: group.count(),
+            }))
+            .inflate();
+
+        return conteoTipos.toArray();
+    } catch (error) {
+        console.error("Error al obtener estadísticas:", error);
+        return { error: "No se pudieron calcular las estadísticas." };
     }
 });

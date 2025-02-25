@@ -26,7 +26,7 @@
     <h1 id="h1">Bienvenido</h1>
     <button id="open-pokedex">Ir a la Pokédex</button>
     <button id="open-teams">Gestión de Equipos</button>
-
+    <button id="open-stats">Stats de la pokeAPI</button>
     <script>
             const h1 = document.getElementById("h1");
             const username = localStorage.getItem('username');
@@ -38,6 +38,10 @@
 
         document.getElementById("open-teams").addEventListener("click", () => {
             window.electronAPI.openTeams();
+        });
+
+        document.getElementById("open-stats").addEventListener("click", () => {
+            window.electronAPI.openStats();
         });
     </script>
 </body>
