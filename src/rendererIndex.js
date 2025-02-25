@@ -1,78 +1,70 @@
 document.addEventListener("DOMContentLoaded", function () {
     localStorage.clear();
-    const cambioBT = document.getElementById("cambioBT");
-    const inicioBT = document.getElementById("inicioBT");
-    const registroBT = document.getElementById("registroBT");
-    const pass2 = document.getElementById("pass2");
-    const textPass2 = document.getElementById("pass2");
-    const textPass = document.getElementById("pass");
-    const nombreUser = document.getElementById("user");
-    let registroActivo = false;
 
-    // Contenedor para mostrar el mensaje de error
+    // Elementos del DOM
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+
+    const loginBT = document.getElementById("loginBT");
+    const registerBT = document.getElementById("registerBT");
+    const switchToRegister = document.getElementById("switchToRegister");
+    const switchToLogin = document.getElementById("switchToLogin");
+
+    const loginUser = document.getElementById("loginUser");
+    const loginPass = document.getElementById("loginPass");
+
+    const registerUser = document.getElementById("registerUser");
+    const registerPass = document.getElementById("registerPass");
+    const registerPass2 = document.getElementById("registerPass2");
+
+    // Contenedor para mostrar mensajes de error
     const errorMessage = document.createElement("p");
     errorMessage.style.color = "red";
     errorMessage.style.display = "none";
     document.body.appendChild(errorMessage);
 
-    // Acción para el botón de inicio de sesión
-    /*
-    inicioBT.onclick = function(event) {
-        iniciarSesion(event); 
-    }
-    */
+    // Alternar formularios
+    switchToRegister.addEventListener("click", function () {
+        loginForm.classList.add("hidden");
+        registerForm.classList.remove("hidden");
+        errorMessage.style.display = "none"; // Ocultar mensajes de error al cambiar de vista
+    });
 
-    // Acción para alternar entre registro e inicio de sesión
-    cambioBT.addEventListener("click", function (event) {
-        event.preventDefault();
-        registroActivo = !registroActivo;
-
-        if (registroActivo) {
-            pass2.style.display = "block";
-            textPass2.style.display = "block";
-            inicioBT.textContent = "Registrarse";
-            inicioBT.id = "registroBT";
-            cambioBT.textContent = "Ir a Iniciar sesión";
-        } else {
-            pass2.style.display = "none";
-            textPass2.style.display = "none";
-            inicioBT.textContent = "Iniciar sesión";
-            inicioBT.id = "inicioBT";
-            cambioBT.textContent = "Ir a Registrarse";
-        }
+    switchToLogin.addEventListener("click", function () {
+        registerForm.classList.add("hidden");
+        loginForm.classList.remove("hidden");
+        errorMessage.style.display = "none";
     });
 
     // Función para iniciar sesión
-    async function iniciarSesion(event){
-        console.log("login")
-
+    async function iniciarSesion(event) {
         event.preventDefault();
-        
-        const user = nombreUser.value.trim();
-        const pass = textPass.value.trim();
-        if(!user || !pass){
+        console.log("Intentando iniciar sesión...");
+        const user = loginUser.value.trim();
+        const pass = loginPass.value.trim();
+        if (!user || !pass) {
             errorMessage.textContent = "Faltan datos para iniciar sesión";
             errorMessage.style.display = "block";
+            return;
+        }
+        errorMessage.style.display = "none";
+        const result = await window.electronAPI.comprobarLogin(user, pass);
+        if (result === true) {
+            localStorage.setItem('username', user);
+            window.electronAPI.openInicio();
         } else {
-            errorMessage.style.display = "none";
-            const result = await window.electronAPI.comprobarLogin(user, pass);
-            if(result === true){
-                localStorage.setItem('username', user);
-                window.electronAPI.openInicio();
-            } else {
-                errorMessage.textContent = "Datos incorrectos para el inicio de sesión";
-                errorMessage.style.display = "block";
-            }
+            errorMessage.textContent = "Datos incorrectos para el inicio de sesión";
+            errorMessage.style.display = "block";
         }
     }
 
     // Función para registrarse
-    async function registrarse(event){
-        console.log("registro")
+    async function registrarse(event) {
         event.preventDefault();
-        const user = nombreUser.value.trim();
-        const pass = textPass.value.trim();
-        const pass2Value = textPass2.value.trim();
+        console.log("Intentando registrarse...");
+        const user = registerUser.value.trim();
+        const pass = registerPass.value.trim();
+        const pass2Value = registerPass2.value.trim();
         if (!user || !pass || !pass2Value) {
             errorMessage.textContent = "Faltan datos para registrarse";
             errorMessage.style.display = "block";
@@ -83,7 +75,10 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage.style.display = "block";
             return;
         }
+        errorMessage.style.display = "none";
         const result = await window.electronAPI.registrarUsuario(user, pass);
+        console.log(result);
+
         if (result === true) {
             localStorage.setItem('username', user);
             window.electronAPI.openInicio();
@@ -93,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    if (registroBT) {
-        registroBT.onclick = registrarse;
-    }
+    // Asignar eventos a botones
+    loginBT.addEventListener("click", iniciarSesion);
+    registerBT.addEventListener("click", registrarse);
 });

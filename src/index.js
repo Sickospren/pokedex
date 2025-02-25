@@ -143,7 +143,7 @@ ipcMain.handle("registrar-usuario", async (_, user, pass) => {
         const result = await registrarUsuario(user, pass);
         return result;
     } catch (error) {
-        return { error: "Fallo en la comprobación del login" };
+        return { error: "Fallo en el registro en index" };
     }
 });
 

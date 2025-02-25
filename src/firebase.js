@@ -27,7 +27,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 async function comprobarLogin(username, contrasena) {
     try {
-        const db = getFirestore();
+        const db = getFirestore(firebaseApp);
         const usuariosRef = collection(db, "usuarios");
         // Buscar al usuario por nombre de usuario
         const qUsername = query(usuariosRef, where("nombre_usuario", "==", username));
@@ -52,13 +52,13 @@ async function comprobarLogin(username, contrasena) {
 }
 
 async function registrarUsuario(nombre_usuario, contrasena) {
-    const db = getFirestore();
+    const db = getFirestore(firebaseApp);
     const usuariosRef = collection(db, "usuarios");
     try {
         const docSnap = await getDocs(query(usuariosRef, where("nombre_usuario", "==", nombre_usuario)));
         if (!docSnap.empty) {
             console.log("El nombre de usuario ya está en uso.");
-            return { error: "El nombre de usuario ya está en uso." };
+            return false;
         }
         // Hashear la contraseña con un salt de 10
         const salt = await bcrypt.genSalt(10);
@@ -77,3 +77,5 @@ async function registrarUsuario(nombre_usuario, contrasena) {
         return false;
     }
 }
+
+module.exports = { comprobarLogin, registrarUsuario };
