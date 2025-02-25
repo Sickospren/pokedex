@@ -17,22 +17,35 @@ function renderPokemonList(pokemonList) {
     listItem.classList.add("pokemon-item");
 
     // Crear imagen
+    let srcImagen = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeId}.png`;
     const image = document.createElement("img");
-    image.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeId}.png`;
+    image.src = srcImagen;
     image.alt = pokemon.name;
 
     // Nombre del Pokémon
+    let nombrePokemon = pokemon.name.toUpperCase();
     const nameTag = document.createElement("p");
-    nameTag.textContent = pokemon.name.toUpperCase();
+    nameTag.textContent = nombrePokemon;
+
+    // Boton para añadir al equipo
+    const añadirBtn = document.createElement("button");
+    añadirBtn.innerHTML = 'Añadir al equipo';
+
+    añadirBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      añadirPokemonEquipo(nombrePokemon, srcImagen);
+    });
 
     // Agregar evento para abrir detalles
     listItem.addEventListener("click", () => {
+
       console.log("Abriendo detalles de:", pokemon.name);
       window.electronAPI.openDetailsWindow(pokemon.name);
     });
 
     listItem.appendChild(image);
     listItem.appendChild(nameTag);
+    listItem.appendChild(añadirBtn);
     listContainer.appendChild(listItem);
   }
 }
@@ -53,3 +66,7 @@ document.getElementById("close-pokedex").addEventListener("click", () => {
 
 // Cargar Pokémon al inicio
 document.addEventListener("DOMContentLoaded", loadPokemonList);
+
+function añadirPokemonEquipo(nombre, imagen) {
+  console.log("Nombre del pokemon: " + nombre + " Imagen: " + imagen);
+}

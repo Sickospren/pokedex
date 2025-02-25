@@ -9,10 +9,13 @@ let pokedexWindow;
 let teamsWindow;
 let detailsWindow;
 
+const width = 1000;
+const height = 700;
+
 function createMainWindow() {
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: width,
+        height: height,
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
             contextIsolation: true,
@@ -42,8 +45,8 @@ function checkAndShowInicioWindow() {
 ipcMain.on("open-inicio", () => {
     if (!inicioWindow) {
         inicioWindow = new BrowserWindow({
-            width: 800,
-            height: 600,
+            width: width,
+            height: height,
             webPreferences: {
                 preload: path.join(__dirname, "preload.js"),
                 contextIsolation: true,
@@ -67,8 +70,8 @@ ipcMain.on("open-inicio", () => {
 ipcMain.on("open-pokedex", () => {
     if (!pokedexWindow) {
         pokedexWindow = new BrowserWindow({
-            width: 800,
-            height: 600,
+            width: width,
+            height: height,
             webPreferences: {
                 preload: path.join(__dirname, "preload.js"),
                 contextIsolation: true,
@@ -91,8 +94,8 @@ ipcMain.on("open-pokedex", () => {
 ipcMain.on("open-teams", () => {
     if (!teamsWindow) {
         teamsWindow = new BrowserWindow({
-            width: 800,
-            height: 600,
+            width: width,
+            height: height,
             webPreferences: {
                 preload: path.join(__dirname, "preload.js"),
                 contextIsolation: true,
@@ -176,8 +179,8 @@ ipcMain.on("open-details-window", async (_, pokemon) => {
 function openDetailsWindow(pokemonData) {
     if (!detailsWindow) {
         detailsWindow = new BrowserWindow({
-            width: 800,
-            height: 600,
+            width: width,
+            height: height,
             webPreferences: {
                 preload: path.join(__dirname, "preload.js"),
                 contextIsolation: true,
