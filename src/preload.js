@@ -15,6 +15,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   openInicio: () => ipcRenderer.send("open-inicio"),
   openPokedex: () => ipcRenderer.send("open-pokedex"),
   openTeams: () => ipcRenderer.send("open-teams"),
+  openStats: () => ipcRenderer.send("open-stats"),
   closeTeamsWindow: () => ipcRenderer.send("close-teams-window"),
   closePokedexWindow: () => ipcRenderer.send("close-pokedex-window"),
+  fetchStats: () => ipcRenderer.invoke("fetch-stats"),
+
 });
