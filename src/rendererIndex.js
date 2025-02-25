@@ -1,5 +1,3 @@
-import { comprobarLogin, registrarUsuario } from "./firebase";
-
 document.addEventListener("DOMContentLoaded", function () {
     localStorage.clear();
     const cambioBT = document.getElementById("cambioBT");
@@ -18,9 +16,11 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.appendChild(errorMessage);
 
     // Acción para el botón de inicio de sesión
+    /*
     inicioBT.onclick = function(event) {
         iniciarSesion(event); 
     }
+    */
 
     // Acción para alternar entre registro e inicio de sesión
     cambioBT.addEventListener("click", function (event) {
@@ -44,6 +44,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Función para iniciar sesión
     async function iniciarSesion(event){
+        console.log("login")
+
         event.preventDefault();
         
         const user = nombreUser.value.trim();
@@ -53,8 +55,8 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage.style.display = "block";
         } else {
             errorMessage.style.display = "none";
-            const result = await comprobarLogin(user, pass);
-            if(result){
+            const result = await window.electronAPI.comprobarLogin(user, pass);
+            if(result === true){
                 localStorage.setItem('username', user);
                 window.electronAPI.openInicio();
             } else {
@@ -66,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Función para registrarse
     async function registrarse(event){
+        console.log("registro")
         event.preventDefault();
         const user = nombreUser.value.trim();
         const pass = textPass.value.trim();
@@ -80,8 +83,8 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage.style.display = "block";
             return;
         }
-        const result = await registrarUsuario(user, pass);
-        if (result) {
+        const result = await window.electronAPI.registrarUsuario(user, pass);
+        if (result === true) {
             localStorage.setItem('username', user);
             window.electronAPI.openInicio();
         } else {

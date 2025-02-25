@@ -1,7 +1,8 @@
-import { initializeApp } from "firebase/app"
-import { getFirestore, collection, getDocs, query, where, setDoc, doc, getDoc, deleteDoc,updateDoc } from "firebase/firestore";
-import bcrypt from 'bcryptjs';
+const { initializeApp } = require("firebase/app");
+const { getFirestore, collection, getDocs, query, where, setDoc, doc, getDoc, deleteDoc, updateDoc } = require("firebase/firestore");
+const bcrypt = require("bcryptjs");
 
+/*
 const firebaseConfig = {
     apiKey: process.env.API_KEY,
     authDomain: process.env.AUTH_DOMAIN,
@@ -10,11 +11,21 @@ const firebaseConfig = {
     messagingSenderId: process.env.MESSAGING_SENDER_ID,
     appId: process.env.APP_ID
 };
+*/
 
+const firebaseConfig = {
+    apiKey: "AIzaSyBRX96uDEDS66JnVDXJ12JB0FTiwoorVFs",
+    authDomain: "pokedex-8c2b4.firebaseapp.com",
+    projectId: "pokedex-8c2b4",
+    storageBucket: "pokedex-8c2b4.firebasestorage.app",
+    messagingSenderId: "899715103342",
+    appId: "1:899715103342:web:1e221aba36686b7ce9847f",
+    measurementId: "G-2EXFRSH3ZL"
+};
 
 const firebaseApp = initializeApp(firebaseConfig);
 
-export async function comprobarLogin(username, contrasena) {
+async function comprobarLogin(username, contrasena) {
     try {
         const db = getFirestore();
         const usuariosRef = collection(db, "usuarios");
@@ -40,8 +51,7 @@ export async function comprobarLogin(username, contrasena) {
     }
 }
 
-
-export async function registrarUsuario(nombre_usuario, contrasena) {
+async function registrarUsuario(nombre_usuario, contrasena) {
     const db = getFirestore();
     const usuariosRef = collection(db, "usuarios");
     try {

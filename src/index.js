@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
+const { comprobarLogin, registrarUsuario} = require("./firebase");
 const path = require("path");
 const axios = require("axios");
 
@@ -124,6 +125,25 @@ ipcMain.handle("fetch-pokemon-details", async (_, pokemon) => {
         return response.data;
     } catch (error) {
         return { error: "No se encontró el Pokémon" };
+    }
+});
+
+//Funciones de Firebase
+ipcMain.handle("comprobar-login", async (_, user, pass) => {
+    try {
+        const result = await comprobarLogin(user, pass);
+        return result;
+    } catch (error) {
+        return { error: "Fallo en la comprobación del login" };
+    }
+});
+
+ipcMain.handle("registrar-usuario", async (_, user, pass) => {
+    try {
+        const result = await registrarUsuario(user, pass);
+        return result;
+    } catch (error) {
+        return { error: "Fallo en la comprobación del login" };
     }
 });
 
