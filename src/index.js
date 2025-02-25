@@ -314,3 +314,8 @@ ipcMain.handle("fetch-stats", async () => {
         return { error: "No se pudieron calcular las estadísticas." };
     }
 });
+
+ipcMain.handle("fetch-stats-usuario", async (_,user) => {
+    const result = await obtenerEquiposDeUsuario(user);
+    
+});
