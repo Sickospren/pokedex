@@ -78,4 +78,104 @@ async function registrarUsuario(nombre_usuario, contrasena) {
     }
 }
 
-module.exports = { comprobarLogin, registrarUsuario };
+async function comprobarEquipoExistente(ids, user) {
+    const db = getFirestore(firebaseApp);
+    const equiposRef = collection(db, "equipo");
+    try {
+        // Buscar todos los equipos del usuario
+        const q = query(equiposRef, where("username", "==", user));
+        const querySnapshot = await getDocs(q);
+        // Comprobar si ya existe un equipo con los mismos IDs (sin importar el orden)
+        for (const docSnapshot of querySnapshot.docs) {
+            const equipoData = docSnapshot.data();
+            const equipoIds = [
+                equipoData.poke1,
+                equipoData.poke2,
+                equipoData.poke3,
+                equipoData.poke4,
+                equipoData.poke5,
+                equipoData.poke6
+            ];
+            // Ordenamos ambos arrays de IDs para compararlos sin importar el orden
+            const idsOrdenados = [...ids].sort((a, b) => a - b);
+            const equipoIdsOrdenados = [...equipoIds].sort((a, b) => a - b);
+
+            if (JSON.stringify(idsOrdenados) === JSON.stringify(equipoIdsOrdenados)) {
+                console.log("Ya existe un equipo igual para este usuario.");
+                return false;
+            }
+        }
+        console.log("No existe un equipo igual para este usuario.");
+        return true;
+    } catch (error) {
+        console.error("Error al comprobar si el equipo existe:", error);
+        return false;
+    }
+}
+
+async function annadirEquipo(ids, user) {
+    const equipoExistente = await comprobarEquipoExistente(ids, user);
+
+    if (!equipoExistente) {
+        console.log("No se puede añadir el equipo porque ya existe uno igual.");
+        return false;
+    }
+    const db = getFirestore(firebaseApp);
+    const equiposRef = collection(db, "equipo");
+    try {
+        const equipoData = {
+            poke1: ids[0],
+            poke2: ids[1],
+            poke3: ids[2],
+            poke4: ids[3],
+            poke5: ids[4],
+            poke6: ids[5],
+            username: user
+        };
+        await setDoc(doc(equiposRef), equipoData);
+        console.log("Equipo añadido exitosamente.");
+        return true;
+    } catch (error) {
+        console.error("Error al añadir el equipo:", error);
+        return false;
+    }
+}
+
+async function eliminarEquipo(ids, user) {
+    const db = getFirestore(firebaseApp);
+    const equiposRef = collection(db, "equipo");
+    try {
+        // Buscar todos los equipos del usuario
+        const q = query(equiposRef, where("username", "==", user));
+        const querySnapshot = await getDocs(q);
+        // Recorrer los documentos para encontrar el que coincide con los IDs
+        for (const docSnapshot of querySnapshot.docs) {
+            const equipoData = docSnapshot.data();
+            const equipoIds = [
+                equipoData.poke1,
+                equipoData.poke2,
+                equipoData.poke3,
+                equipoData.poke4,
+                equipoData.poke5,
+                equipoData.poke6
+            ];
+            // Ordenamos ambos arrays de IDs para compararlos sin importar el orden
+            const idsOrdenados = [...ids].sort((a, b) => a - b);
+            const equipoIdsOrdenados = [...equipoIds].sort((a, b) => a - b);
+            if (JSON.stringify(idsOrdenados) === JSON.stringify(equipoIdsOrdenados)) {
+                // Eliminar el documento
+                await deleteDoc(docSnapshot.ref);
+                console.log("Equipo eliminado exitosamente.");
+                return true;
+            }
+        }
+        console.log("No se encontró un equipo igual para este usuario.");
+        return false;
+    } catch (error) {
+        console.error("Error al eliminar el equipo:", error);
+        return false;
+    }
+}
+
+
+module.exports = { comprobarLogin, registrarUsuario, annadirEquipo, borrarEquipo };
