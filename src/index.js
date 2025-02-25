@@ -32,7 +32,7 @@ function checkAndShowMainWindow() {
 }
 
 //Abrir Inicio y ocultar index
-ipcMain.on("open-inicio", (user) => {
+ipcMain.on("open-inicio", () => {
     if (!inicioWindow) {
         inicioWindow = new BrowserWindow({
             width: 800,
@@ -45,16 +45,7 @@ ipcMain.on("open-inicio", (user) => {
         });
 
         inicioWindow.loadFile(path.join(__dirname, "inicio.html"));
-
-        pokedexWindow.webContents.on('did-finish-load', () => {
-            // Pasar el nombre de usuario a la ventana de inicio
-            pokedexWindow.webContents.send('set-username', user);
-          });
-
-        inicioWindow.on("closed", () => {
-            inicioWindow = null;
-            checkAndShowMainWindow(); // Si no hay ventanas abiertas, mostrar el Inicio
-        });
+        mainWindow.on("closed", () => (mainWindow = null));
 
         mainWindow.hide(); // Ocultar el Inicio
     }

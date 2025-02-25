@@ -28,10 +28,9 @@
     <button id="open-teams">Gestión de Equipos</button>
 
     <script>
-        window.electronAPI.onSetUsername((user) => {
             const h1 = document.getElementById("h1");
-            h1.textContent = `Bienvenido, ${user}`;
-        });
+            const username = localStorage.getItem('username');
+            h1.textContent = `Bienvenido, ${username}`;
 
         document.getElementById("open-pokedex").addEventListener("click", () => {
             window.electronAPI.openPokedex();

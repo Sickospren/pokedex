@@ -1,4 +1,7 @@
+import { comprobarLogin, registrarUsuario } from "./firebase";
+
 document.addEventListener("DOMContentLoaded", function () {
+    localStorage.clear();
     const cambioBT = document.getElementById("cambioBT");
     const inicioBT = document.getElementById("inicioBT");
     const registroBT = document.getElementById("registroBT");
@@ -14,10 +17,12 @@ document.addEventListener("DOMContentLoaded", function () {
     errorMessage.style.display = "none";
     document.body.appendChild(errorMessage);
 
+    // Acción para el botón de inicio de sesión
     inicioBT.onclick = function(event) {
         iniciarSesion(event); 
     }
 
+    // Acción para alternar entre registro e inicio de sesión
     cambioBT.addEventListener("click", function (event) {
         event.preventDefault();
         registroActivo = !registroActivo;
@@ -37,7 +42,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    function iniciarSesion(event){
+    // Función para iniciar sesión
+    async function iniciarSesion(event){
         event.preventDefault();
         
         const user = nombreUser.value.trim();
@@ -47,7 +53,44 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage.style.display = "block";
         } else {
             errorMessage.style.display = "none";
-            window.electronAPI.openInicio(user);
+            const result = await comprobarLogin(user, pass);
+            if(result){
+                localStorage.setItem('username', user);
+                window.electronAPI.openInicio();
+            } else {
+                errorMessage.textContent = "Datos incorrectos para el inicio de sesión";
+                errorMessage.style.display = "block";
+            }
         }
+    }
+
+    // Función para registrarse
+    async function registrarse(event){
+        event.preventDefault();
+        const user = nombreUser.value.trim();
+        const pass = textPass.value.trim();
+        const pass2Value = textPass2.value.trim();
+        if (!user || !pass || !pass2Value) {
+            errorMessage.textContent = "Faltan datos para registrarse";
+            errorMessage.style.display = "block";
+            return;
+        }
+        if (pass !== pass2Value) {
+            errorMessage.textContent = "Las contraseñas no coinciden";
+            errorMessage.style.display = "block";
+            return;
+        }
+        const result = await registrarUsuario(user, pass);
+        if (result) {
+            localStorage.setItem('username', user);
+            window.electronAPI.openInicio();
+        } else {
+            errorMessage.textContent = "Error al registrar el usuario. Intenta nuevamente.";
+            errorMessage.style.display = "block";
+        }
+    }
+
+    if (registroBT) {
+        registroBT.onclick = registrarse;
     }
 });

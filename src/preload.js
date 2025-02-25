@@ -1,5 +1,3 @@
-// See the Electron documentation for details on how to use preload scripts:
-// https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
@@ -9,11 +7,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   closeDetailsWindow: () => ipcRenderer.send("close-details-window"),
   onPokemonData: (callback) => ipcRenderer.on("pokemon-data", (_, data) => callback(data)),
 
-  openInicio: () => ipcRenderer.send("open-inicio", user),
-  onSetUsername: (callback) => ipcRenderer.on('set-username', (event, username) => callback(username)),
+  openInicio: () => ipcRenderer.send("open-inicio"),
   openPokedex: () => ipcRenderer.send("open-pokedex"),
   openTeams: () => ipcRenderer.send("open-teams"),
   closeTeamsWindow: () => ipcRenderer.send("close-teams-window"),
   closePokedexWindow: () => ipcRenderer.send("close-pokedex-window"),
-
 });
