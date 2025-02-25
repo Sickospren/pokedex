@@ -1,5 +1,11 @@
 let allPokemon = []; // Guardamos la lista completa para filtrar después
 
+// Inicializamos el JSON del equipo
+let equipoJSON = [];
+
+// Obtenemos los div del sidebar
+const sidebarDivs = document.querySelectorAll(".sidebar div");
+
 // Cargar la lista de Pokémon
 async function loadPokemonList() {
   allPokemon = await window.electronAPI.fetchPokemonList(); // Guardamos la lista original
@@ -68,5 +74,49 @@ document.getElementById("close-pokedex").addEventListener("click", () => {
 document.addEventListener("DOMContentLoaded", loadPokemonList);
 
 function añadirPokemonEquipo(pokeId, nombre, imagen) {
-  console.log("Id: "+ pokeId +" Nombre del pokemon: " + nombre + " Imagen: " + imagen);
+  // Comprobar que no tenga más de 6 Pokemons
+  if (equipoJSON.length >= 6) {
+    console.log("⚠️ No puedes añadir más de 6 Pokémon al equipo.");
+    return;
+  }
+  // comprobar que ese pokemon no esté en el json
+  const existe = equipoJSON.some(pokemon => pokemon.id === pokeId);
+  if (existe) {
+    console.log(`⚠️ El Pokémon ${nombre} ya está en el equipo.`);
+    return;
+  }
+
+  let nuevoPokemon = {
+    id: pokeId,
+    nombre: nombre,
+    imagen: imagen
+  };
+  equipoJSON.push(nuevoPokemon);
+  console.log("📜 Equipo actual:", JSON.stringify(equipoJSON, null, 2));
+
+  // Actualizar el sidebar
+  equipoJSON.forEach((pokemon, index) => {
+    if (index < 6) {
+      sidebarDivs[index].innerHTML = `
+            <p>${pokemon.nombre}</p>
+            <img src="${pokemon.imagen}" alt="${pokemon.nombre}" width="50" height="50">
+        `;
+    }
+  });
 }
+
+document.getElementById("btnGuardarEquipo").addEventListener("click", () => {
+   // Crear un nuevo JSON a partir de equipoJSON, eliminando la propiedad 'imagen'
+   let equipoUserJSON = equipoJSON.map(equipo => {
+    // Crear una copia del objeto equipo sin la propiedad 'imagen'
+    let { imagen, ...equipoSinImagen } = equipo;
+    return equipoSinImagen;
+  });
+
+  // Obtener el usuario de la sesión
+  const user = localStorage.getItem('username');
+  console.log("Equipo del usuario "+ user + ":");
+  console.table(equipoUserJSON);
+
+  
+});
