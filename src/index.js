@@ -130,7 +130,7 @@ ipcMain.on("close-teams-window", () => {
 //Obtener la lista de Pokémon
 ipcMain.handle("fetch-pokemon-list", async () => {
     try {
-        const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=5000");
+        const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=1025");
         return response.data.results;
     } catch (error) {
         console.error("Error al obtener la lista de Pokémon:", error);
