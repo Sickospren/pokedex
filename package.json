@@ -22,6 +22,7 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "data-forge": "^1.10.2",
+    "dotenv": "^16.4.7",
     "electron-squirrel-startup": "^1.0.1",
     "firebase": "^11.3.1",
     "process": "^0.11.10"

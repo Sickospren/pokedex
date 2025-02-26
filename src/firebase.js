@@ -1,18 +1,22 @@
 const { initializeApp } = require("firebase/app");
 const { getFirestore, collection, getDocs, query, where, setDoc, doc, getDoc, deleteDoc, updateDoc, addDoc } = require("firebase/firestore");
 const bcrypt = require("bcryptjs");
+const process = require("process")
+require("dotenv").config();
 
-/*
+
+
 const firebaseConfig = {
     apiKey: process.env.API_KEY,
     authDomain: process.env.AUTH_DOMAIN,
     projectId: process.env.PROJECT_ID,
     storageBucket: process.env.STORAGE_BUCKET,
     messagingSenderId: process.env.MESSAGING_SENDER_ID,
-    appId: process.env.APP_ID
+    appId: process.env.APP_ID,
+    measurementId: process.env.MEASUREMENT_ID
 };
-*/
 
+/*
 const firebaseConfig = {
     apiKey: "AIzaSyBRX96uDEDS66JnVDXJ12JB0FTiwoorVFs",
     authDomain: "pokedex-8c2b4.firebaseapp.com",
@@ -22,6 +26,7 @@ const firebaseConfig = {
     appId: "1:899715103342:web:1e221aba36686b7ce9847f",
     measurementId: "G-2EXFRSH3ZL"
 };
+*/
 
 const firebaseApp = initializeApp(firebaseConfig);
 

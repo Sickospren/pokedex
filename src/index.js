@@ -4,6 +4,8 @@ const path = require("path");
 const axios = require("axios");
 const dataForge = require("data-forge");
 const { DataFrame } = dataForge;
+require('dotenv').config();
+
 
 
 let mainWindow;
