@@ -4,8 +4,6 @@ const bcrypt = require("bcryptjs");
 const process = require("process")
 require("dotenv").config();
 
-
-
 const firebaseConfig = {
     apiKey: process.env.API_KEY,
     authDomain: process.env.AUTH_DOMAIN,
@@ -15,18 +13,6 @@ const firebaseConfig = {
     appId: process.env.APP_ID,
     measurementId: process.env.MEASUREMENT_ID
 };
-
-/*
-const firebaseConfig = {
-    apiKey: "AIzaSyBRX96uDEDS66JnVDXJ12JB0FTiwoorVFs",
-    authDomain: "pokedex-8c2b4.firebaseapp.com",
-    projectId: "pokedex-8c2b4",
-    storageBucket: "pokedex-8c2b4.firebasestorage.app",
-    messagingSenderId: "899715103342",
-    appId: "1:899715103342:web:1e221aba36686b7ce9847f",
-    measurementId: "G-2EXFRSH3ZL"
-};
-*/
 
 const firebaseApp = initializeApp(firebaseConfig);
 
@@ -84,10 +70,10 @@ async function registrarUsuario(nombre_usuario, contrasena) {
 }
 
 async function annadirEquipo(pokemonArray, user) {
-    console.log("FIREBASE")
     const db = getFirestore(firebaseApp);
     const equiposRef = collection(db, "equipos");
     try {
+        // Recoge el json del equipo y añade el nombre de usuario
         const equipoData = {
             equipo: pokemonArray,
             usuario: user
@@ -101,12 +87,11 @@ async function annadirEquipo(pokemonArray, user) {
     }
 }
 
-
-
 async function eliminarEquipo(docId) {
     const db = getFirestore(firebaseApp);
     const equipoDocRef = doc(db, "equipos", docId);
     try {
+        // Recibe el id del documento para borrarlo
         await deleteDoc(equipoDocRef);
         console.log("Equipo eliminado exitosamente.");
         return true;
@@ -120,6 +105,7 @@ async function obtenerEquiposDeUsuario(user) {
     const db = getFirestore(firebaseApp);
     const equiposRef = collection(db, "equipos");
     try {
+        // Devuelve el json de cada equipo, juntando todos los equipos en un mismo json
         const q = query(equiposRef, where("usuario", "==", user));
         const querySnapshot = await getDocs(q);
         const equipos = {};
