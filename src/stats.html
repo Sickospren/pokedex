@@ -12,60 +12,105 @@
             color: #333;
             text-align: center;
             margin: 20px;
+            font-size: larger;
+            font-weight: bolder;
+            background: url('https://t4.ftcdn.net/jpg/02/93/83/15/360_F_293831552_fkq7tH8eDTzI0u4u3HRrIMHzZNm1JZvp.jpg') no-repeat center center fixed;
+            background-size: cover;
         }
 
+        h1 {
+            margin-top: 5%;
+            color: #ff0000;
+            text-shadow: 2px 2px 0px #000;
+            font-size: 60px;
+        }
+
+
         button {
-            background: #007bff;
-            border: none;
-            color: white;
             padding: 10px 15px;
             margin: 10px;
             font-size: 14px;
+            background: #ffcc00;
+            border: 3px solid #ff0000;
+            color: black;
+            font-weight: bold;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            font-family: 'Press Start 2P', cursive;
         }
 
         button:hover {
-            background: #0056b3;
+            background: #ff0000;
+            color: white;
+            border: 3px solid #ffcc00;
         }
 
         #contenedorDatos {
             margin-top: 20px;
-            padding: 15px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 20px;
+            background: #ffcc00;
+            /* Amarillo Pokémon */
+            border: 4px solid #ff0000;
+            /* Rojo Pokémon */
+            border-radius: 10px;
             display: none;
             /* Oculto al inicio */
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th,
-        td {
-            padding: 8px;
-            border: 1px solid #ccc;
+            box-shadow: 4px 4px 0px #000;
             text-align: center;
         }
 
-        th {
-            background: #007bff;
-            color: white;
-            cursor: pointer;
+        /* Estilo para los títulos dentro del contenedor */
+        #contenedorDatos h3 {
+            color: #ff0000;
+            font-family: 'Press Start 2P', cursive;
+            text-shadow: 2px 2px 0px black;
+            margin-bottom: 15px;
         }
 
+        /* Estilo de la tabla tipo interfaz Pokémon */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border: 3px solid #000;
+        }
+
+        /* Encabezados de la tabla con fondo azul */
+        th {
+            background: #ff0000;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            border: 2px solid black;
+            padding: 10px;
+        }
+
+        /* Celdas con bordes oscuros */
+        td {
+            border: 2px solid black;
+            padding: 10px;
+            background: #fff;
+        }
+
+        /* Alternar colores en filas */
         tr:nth-child(even) {
-            background: #f2f2f2;
+            background: #ffeb99;
+            /* Amarillo más claro */
+        }
+
+        /* Estilo para los párrafos */
+        #contenedorDatos p {
+            font-family: 'Press Start 2P', cursive;
+            color: black;
+            text-shadow: 1px 1px 0px white;
+            margin-top: 10px;
         }
     </style>
 </head>
 
 <body>
-    <p>Estadisticas</p>
+    <h1>Estadísticas</h1>
     <button id="btn151">Obtener datos de los primeros 151</button>
     <button id="btnTop3">Obtener Top 3 Pokémon</button>
     <button id="btnTipos">Obtener Tipos más usados</button>

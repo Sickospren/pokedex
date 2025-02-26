@@ -13,9 +13,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const top3 = await window.electronAPI.obtenerTop3Pokemons(username);
         const html = `
             <h3>Top 3 Pokémon Más Usados por ${username}</h3>
-            <ul>
-                ${top3.map(poke => `<li>${poke.nombre} (${poke.cantidad} veces)</li>`).join("")}
-            </ul>
+            <p>
+                ${top3.map(poke => `<p>${poke.nombre} (${poke.cantidad} veces)</p>`).join("")}
+            </p>
         `;
         actualizarContenido(html);
     });
