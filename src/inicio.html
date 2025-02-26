@@ -1,36 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Principal</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Press Start 2P', cursive;
             text-align: center;
+            color: white;
+            background: url('https://t4.ftcdn.net/jpg/02/93/83/15/360_F_293831552_fkq7tH8eDTzI0u4u3HRrIMHzZNm1JZvp.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-size: larger;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-around;
             align-items: center;
-            height: 100vh;
-            gap: 20px;
         }
+
+        h1 {
+            margin-top: 10%;
+            margin-bottom: 100px;
+            color: #ff0000;
+            text-shadow: 2px 2px 0px #000;
+        }
+
         button {
-            padding: 15px 30px;
-            font-size: 18px;
+            width: 45%;
+            padding: 10px;          
+            margin: 20px;
+            height: 50px;
+            background: #ffcc00;
+            border: 3px solid #ff0000;
+            color: black;
+            font-weight: bold;
             cursor: pointer;
+            border-radius: 10px;
+            text-transform: uppercase;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        button:hover {
+            background: #ff0000;
+            color: white;
+            border: 3px solid #ffcc00;
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
+
 <body>
     <h1 id="h1">Bienvenido</h1>
     <button id="open-pokedex">Ir a la Pokédex</button>
     <button id="open-teams">Gestión de Equipos</button>
     <button id="open-stats">Stats de la pokeAPI</button>
     <script>
-            const h1 = document.getElementById("h1");
-            const username = localStorage.getItem('username');
-            h1.textContent = `Bienvenido, ${username}`;
+        const h1 = document.getElementById("h1");
+        const username = localStorage.getItem('username');
+        h1.textContent = `Bienvenido, ${username}`;
 
         document.getElementById("open-pokedex").addEventListener("click", () => {
             window.electronAPI.openPokedex();
@@ -45,4 +78,5 @@
         });
     </script>
 </body>
+
 </html>

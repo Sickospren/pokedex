@@ -81,7 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     border-radius: 5px;
                     cursor: pointer;
                     font-size: 16px;
-                ">🔊 Escuchar Grito</button>
+                    height: 50px;
+                ">Escuchar Grito</button>
                 <button id="close-details" style="
                     margin-top: 10px;
                     padding: 10px 15px;
@@ -91,6 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     border-radius: 5px;
                     cursor: pointer;
                     font-size: 16px;
+                    height: 50px;
                 ">Cerrar</button>
             </div>
         `;
