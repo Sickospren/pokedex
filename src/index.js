@@ -345,18 +345,15 @@ ipcMain.handle("obtener-tipos-151", async () => {
 });
 
 ipcMain.handle("obtener-top3-jugador", async (_, username) => {
-    try {
+
         const equipos = await obtenerEquiposDeUsuario(username);
         if (!equipos) {
             return { error: "El usuario no tiene equipos registrados." };
         }
-
         const pokemonList = Object.values(equipos).flat();
-
         if (pokemonList.length === 0) {
             return { error: "El usuario no tiene Pokémon en sus equipos." };
         }
-
         const obtenerDatosPokemon = async (id) => {
             try {
                 const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -369,7 +366,6 @@ ipcMain.handle("obtener-top3-jugador", async (_, username) => {
                 return null;
             }
         };
-
         const datosPokemons = [];
         for (const p of pokemonList) {
             const datos = await obtenerDatosPokemon(p.id);
@@ -377,13 +373,10 @@ ipcMain.handle("obtener-top3-jugador", async (_, username) => {
                 datosPokemons.push(datos);
             }
         }
-
         if (datosPokemons.length === 0) {
             return { error: "No se pudieron obtener datos de los Pokémon." };
         }
-
         const df = new DataFrame(datosPokemons);
-
         const conteoPokemons = df.groupBy(row => row.nombre)
             .select(group => ({
                 nombre: group.first().nombre,
@@ -391,18 +384,11 @@ ipcMain.handle("obtener-top3-jugador", async (_, username) => {
             }))
             .orderByDescending(row => row.cantidad)
             .toArray();
-
         if (conteoPokemons.length === 0) {
             return { error: "No hay datos suficientes para calcular el top 3." };
         }
-
         //retornamos las 3 primeras posiciones
         return conteoPokemons.slice(0, 3);
-
-    } catch (error) {
-        console.error("Error en obtener-top3-jugador:", error);
-        return { error: "Fallo al obtener los equipos" };
-    }
 });
 
 ipcMain.handle("obtener-tipos-jugador", async (_, username) => {
