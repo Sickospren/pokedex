@@ -60,7 +60,7 @@ ipcMain.on("open-inicio", () => {
             },
         });
 
-        inicioWindow.loadFile(path.join(__dirname, "inicio.html"));
+        inicioWindow.loadFile(path.join(__dirname, "./views/inicio.html"));
         mainWindow.on("closed", () => (mainWindow = null));
 
         inicioWindow.on("closed", () => {
@@ -85,7 +85,7 @@ ipcMain.on("open-pokedex", () => {
             },
         });
 
-        pokedexWindow.loadFile(path.join(__dirname, "pokedex.html"));
+        pokedexWindow.loadFile(path.join(__dirname, "./views/pokedex.html"));
 
         pokedexWindow.on("closed", () => {
             pokedexWindow = null;
@@ -109,7 +109,7 @@ ipcMain.on("open-teams", () => {
             },
         });
 
-        teamsWindow.loadFile(path.join(__dirname, "equipos.html"));
+        teamsWindow.loadFile(path.join(__dirname, "./views/equipos.html"));
 
         teamsWindow.on("closed", () => {
             teamsWindow = null;
@@ -222,7 +222,7 @@ function openDetailsWindow(pokemonData) {
             },
         });
 
-        detailsWindow.loadFile(path.join(__dirname, "detalles.html"));
+        detailsWindow.loadFile(path.join(__dirname, "./views/detalles.html"));
 
         detailsWindow.on("closed", () => {
             detailsWindow = null;
@@ -274,7 +274,7 @@ ipcMain.on("open-stats", () => {
                 nodeIntegration: false,
             },
         });
-        statsWindow.loadFile(path.join(__dirname, "stats.html"));
+        statsWindow.loadFile(path.join(__dirname, "./views/stats.html"));
         //statsWindow.webContents.openDevTools();
 
         statsWindow.on("closed", () => {
