@@ -273,7 +273,7 @@ ipcMain.on("open-stats", () => {
             },
         });
         statsWindow.loadFile(path.join(__dirname, "stats.html"));
-        statsWindow.webContents.openDevTools();
+        //statsWindow.webContents.openDevTools();
 
         statsWindow.on("closed", () => {
             statsWindow = null;
