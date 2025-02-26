@@ -295,7 +295,7 @@ ipcMain.handle("obtener-tipos-151", async () => {
         "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"
     ];
 
-   
+
     const obtenerDatosPokemon = async (id) => {
         try {
             const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -303,7 +303,7 @@ ipcMain.handle("obtener-tipos-151", async () => {
                 id: response.data.id,
                 tipos: response.data.types.map(t => t.type.name),
             };
-             //de cada pokemon obtendremos los siguientes datos {"id": x,"tipos": ["tipo1", "tipo2"]}
+            //de cada pokemon obtendremos los siguientes datos {"id": x,"tipos": ["tipo1", "tipo2"]}
         } catch (error) {
             console.error(`Error al obtener datos de ${id}:`, error.message);
             return null;
@@ -345,15 +345,18 @@ ipcMain.handle("obtener-tipos-151", async () => {
 });
 
 ipcMain.handle("obtener-top3-jugador", async (_, username) => {
-
+    try {
         const equipos = await obtenerEquiposDeUsuario(username);
         if (!equipos) {
             return { error: "El usuario no tiene equipos registrados." };
         }
+
         const pokemonList = Object.values(equipos).flat();
+
         if (pokemonList.length === 0) {
             return { error: "El usuario no tiene Pokémon en sus equipos." };
         }
+
         const obtenerDatosPokemon = async (id) => {
             try {
                 const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -366,6 +369,7 @@ ipcMain.handle("obtener-top3-jugador", async (_, username) => {
                 return null;
             }
         };
+
         const datosPokemons = [];
         for (const p of pokemonList) {
             const datos = await obtenerDatosPokemon(p.id);
@@ -373,10 +377,13 @@ ipcMain.handle("obtener-top3-jugador", async (_, username) => {
                 datosPokemons.push(datos);
             }
         }
+
         if (datosPokemons.length === 0) {
             return { error: "No se pudieron obtener datos de los Pokémon." };
         }
+
         const df = new DataFrame(datosPokemons);
+
         const conteoPokemons = df.groupBy(row => row.nombre)
             .select(group => ({
                 nombre: group.first().nombre,
@@ -387,8 +394,13 @@ ipcMain.handle("obtener-top3-jugador", async (_, username) => {
         if (conteoPokemons.length === 0) {
             return { error: "No hay datos suficientes para calcular el top 3." };
         }
+        
         //retornamos las 3 primeras posiciones
         return conteoPokemons.slice(0, 3);
+    } catch (error) {
+        console.error("Error en obtener-top3-jugador:", error);
+        return { error: "Fallo al obtener los equipos" };
+    }
 });
 
 ipcMain.handle("obtener-tipos-jugador", async (_, username) => {
@@ -399,49 +411,54 @@ ipcMain.handle("obtener-tipos-jugador", async (_, username) => {
         "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"
     ];
 
-    const equipos = await obtenerEquiposDeUsuario(username);
+    try {
+        const equipos = await obtenerEquiposDeUsuario(username);
 
-    const pokemonList = Object.values(equipos).flat();
+        const pokemonList = Object.values(equipos).flat();
 
-    const obtenerDatosPokemon = async (id) => {
-        try {
-            const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
-            return {
-                id: response.data.id,
-                tipos: response.data.types.map(t => t.type.name), 
-            };
-        } catch (error) {
-            console.error(`Error al obtener datos de ${id}:`, error.message);
-            return null;
+        const obtenerDatosPokemon = async (id) => {
+            try {
+                const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
+                return {
+                    id: response.data.id,
+                    tipos: response.data.types.map(t => t.type.name),
+                };
+            } catch (error) {
+                console.error(`Error al obtener datos de ${id}:`, error.message);
+                return null;
+            }
+        };
+
+        const datosPokemons = [];
+        for (let i = 0; i < pokemonList.length; i++) {
+            const datos = await obtenerDatosPokemon(pokemonList[i].id);
+            if (datos) {
+                datosPokemons.push(datos);
+            }
         }
-    };
 
-    const datosPokemons = [];
-    for (let i = 0; i < pokemonList.length; i++) {
-        const datos = await obtenerDatosPokemon(pokemonList[i].id);
-        if (datos) {
-            datosPokemons.push(datos);
+        //mismos pasos que en obtener datos 151
+        const df = new DataFrame(datosPokemons);
+        const tiposExpandidos = df
+            .selectMany(row => row.tipos.map(tipo => ({ tipo })))
+            .groupBy(row => row.tipo)
+            .select(group => ({
+                tipo: group.first().tipo,
+                cantidad: group.count()
+            }))
+            .toArray();
+
+        const conteoTipos = Object.fromEntries(tiposPosibles.map(tipo => [tipo, 0]));
+
+        for (const tipoData of tiposExpandidos) {
+            conteoTipos[tipoData.tipo] = tipoData.cantidad;
         }
+
+        const tiposFinal = Object.entries(conteoTipos).map(([tipo, cantidad]) => ({ tipo, cantidad }));
+        return tiposFinal.sort((a, b) => b.cantidad - a.cantidad);
+    } catch (error) {
+        console.error("Error en obtener-tipos-jugador:", error);
+        return { error: "Fallo al obtener los tipos" };
     }
-
-    //mismos pasos que en obtener datos 151
-    const df = new DataFrame(datosPokemons);
-    const tiposExpandidos = df
-        .selectMany(row => row.tipos.map(tipo => ({ tipo })))
-        .groupBy(row => row.tipo)
-        .select(group => ({
-            tipo: group.first().tipo,
-            cantidad: group.count()
-        }))
-        .toArray();
-
-    const conteoTipos = Object.fromEntries(tiposPosibles.map(tipo => [tipo, 0]));
-
-    for (const tipoData of tiposExpandidos) {
-        conteoTipos[tipoData.tipo] = tipoData.cantidad;
-    }
-
-    const tiposFinal = Object.entries(conteoTipos).map(([tipo, cantidad]) => ({ tipo, cantidad }));
-    return tiposFinal.sort((a, b) => b.cantidad - a.cantidad);
 
 });
