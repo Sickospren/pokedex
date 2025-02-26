@@ -9,12 +9,12 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Press Start 2P', cursive;
         }
         body {
-            background: linear-gradient(135deg, #2d3e50, #4f6877);
+            background: radial-gradient(circle, #1a1a2e, #16213e);
             color: #e6e6e6;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
@@ -22,126 +22,125 @@
             justify-content: center;
             align-items: center;
             padding: 0 20px;
+            text-align: center;
         }
         h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #f9f9f9;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffcc00;
+            text-shadow: 2px 2px 0px black, -2px -2px 0px black;
             margin-bottom: 20px;
         }
         #back {
-            background-color: #f39c12;
+            background-color: #ff4757;
             color: #fff;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-size: 18px;
-            font-weight: 600;
+            border: 4px solid #d63031;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: inset 0 -4px #c0392b, 0 4px 8px rgba(0, 0, 0, 0.2);
             margin-bottom: 30px;
         }
         #back:hover {
-            background-color: #e67e22;
+            background-color: #ff6b81;
             transform: scale(1.05);
         }
         #equiposTabla {
             width: 100%;
-            max-width: 1000px;
-            margin-top: 40px;
-            overflow-x: auto;
-            border-radius: 15px;
-            background: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 900px;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            background: #ffcc00;
+            border: 6px solid black;
+            padding: 10px;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.8);
         }
-        table {
+        .equipos-table {
             width: 100%;
-            border-collapse: collapse;
-            font-size: 1rem;
+            border-collapse: separate;
+            border-spacing: 5px;
         }
-        th, td {
-            padding: 16px 24px;
+        .equipos-table th {
+            color: black;
+            background: #ff4757;
+            border: 4px solid black;
+            padding: 12px;
+            text-transform: uppercase;
+            font-size: 12px;
+            text-shadow: 1px 1px 0px black;
+        }
+        .equipos-table td {
+            background: #ffffff;
+            color: black;
+            border: 4px solid black;
+            padding: 12px;
             text-align: center;
+            font-size: 12px;
+            transition: background 0.3s ease;
         }
-        th {
-            background-color: #34495e;
-            color: #fff;
-            font-weight: 600;
-            letter-spacing: 1px;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-        }
-        td {
-            background-color: #f8f8f8;
-            color: #333;
-            border-bottom: 1px solid #ddd;
-            border-left: 1px solid #ddd;
-            transition: background-color 0.3s ease;
-        }    
-        td:hover {
-            background-color: #e3e3e3;
+        .equipos-table td:hover {
+            background: #f4f4f4;
         }
         img {
-            width: 55px;
-            height: 55px;
+            width: 75px;
+            height: 75px;
             object-fit: contain;
-            border-radius: 5px;
+            padding: 2px;
+            background: white;
             transition: transform 0.2s ease;
         }
         img:hover {
             transform: scale(1.2);
         }
         p {
-            font-size: 14px;
-            color: #555;
-            margin-top: 8px;
-            text-transform: capitalize;
+            font-size: 10px;
+            color: black;
+            margin-top: 5px;
+            font-weight: bold;
         }
         .delete-button {
-            background-color: #e74c3c;
+            background-color: #ff4757;
             color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            border: 4px solid black;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: bold;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
         }
         .delete-button:hover {
-            background-color: #c0392b;
+            background-color: #e74c3c;
             transform: scale(1.1);
         }
         .no-data-message {
-            font-size: 1.2rem;
-            color: #888;
+            font-size: 1rem;
+            color: #ffcc00;
             text-align: center;
             margin-top: 40px;
-        }
-        .loading {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 1.5rem;
-            color: #f39c12;
-            font-weight: 600;
-            animation: blink 1.5s infinite ease-in-out;
-        }
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+            text-shadow: 2px 2px 0px black;
         }
     </style>
     
+    
+
 </head>
 <body>
     <h1>Gestión de Equipos</h1>
     <button id="back">Volver al Inicio</button>
     <div id="equiposTabla"></div>
     <script>
+       document.addEventListener("DOMContentLoaded", () => {
+            const sonidoPC = new Audio("https://static.wikia.nocookie.net/soundeffects/images/d/de/SFX_TURN_ON_PC.wav");
+            sonidoPC.play().catch(error => {
+                console.warn("El audio no pudo reproducirse automáticamente:", error);
+            });
+        });
+
         document.getElementById("back").addEventListener("click", () => {
             window.electronAPI.closeTeamsWindow();
         });

@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    
     window.electronAPI.onPokemonData((data) => {
         const detallesDiv = document.getElementById("detalles");
 
