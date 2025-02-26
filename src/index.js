@@ -6,8 +6,6 @@ const dataForge = require("data-forge");
 const { DataFrame } = dataForge;
 require('dotenv').config();
 
-
-
 let mainWindow;
 let inicioWindow;
 let pokedexWindow;
@@ -18,6 +16,7 @@ let statsWindow;
 const width = 1000;
 const height = 700;
 
+//Primera ventana
 function createMainWindow() {
     mainWindow = new BrowserWindow({
         width: width,
@@ -32,7 +31,7 @@ function createMainWindow() {
     mainWindow.loadFile(path.join(__dirname, "index.html"));
     mainWindow.on("closed", () => (mainWindow = null));
 }
-
+//inicio del programa
 app.whenReady().then(createMainWindow);
 
 function checkAndShowMainWindow() {
@@ -42,7 +41,7 @@ function checkAndShowMainWindow() {
 }
 
 function checkAndShowInicioWindow() {
-    if (!pokedexWindow && !teamsWindow) {
+    if (!pokedexWindow && !teamsWindow && !statsWindow) {
         inicioWindow.show();
     }
 }
@@ -86,13 +85,14 @@ ipcMain.on("open-pokedex", () => {
         });
 
         pokedexWindow.loadFile(path.join(__dirname, "./views/pokedex.html"));
+        mainWindow.on("closed", () => (mainWindow = null));
 
         pokedexWindow.on("closed", () => {
             pokedexWindow = null;
             checkAndShowInicioWindow(); // Si no hay ventanas abiertas, mostrar el Inicio
         });
 
-        mainWindow.hide(); // Ocultar el Inicio
+        inicioWindow.hide(); // Ocultar el Inicio
     }
 });
 
@@ -116,7 +116,7 @@ ipcMain.on("open-teams", () => {
             checkAndShowInicioWindow(); // Si no hay ventanas abiertas, mostrar el Inicio
         });
 
-        mainWindow.hide(); // Ocultar el Inicio
+        inicioWindow.hide(); // Ocultar el Inicio
     }
 });
 
@@ -223,6 +223,7 @@ function openDetailsWindow(pokemonData) {
         });
 
         detailsWindow.loadFile(path.join(__dirname, "./views/detalles.html"));
+        mainWindow.on("closed", () => (mainWindow = null));
 
         detailsWindow.on("closed", () => {
             detailsWindow = null;
@@ -275,14 +276,14 @@ ipcMain.on("open-stats", () => {
             },
         });
         statsWindow.loadFile(path.join(__dirname, "./views/stats.html"));
-        //statsWindow.webContents.openDevTools();
+        mainWindow.on("closed", () => (mainWindow = null));
 
         statsWindow.on("closed", () => {
             statsWindow = null;
             checkAndShowInicioWindow();
         });
 
-        mainWindow.hide();
+        inicioWindow.hide();
     }
 });
 
