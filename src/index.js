@@ -346,6 +346,7 @@ ipcMain.handle("obtener-tipos-151", async () => {
 
 ipcMain.handle("obtener-top3-jugador", async (_, username) => {
     try {
+
         const equipos = await obtenerEquiposDeUsuario(username);
         if (!equipos) {
             return { error: "El usuario no tiene equipos registrados." };
@@ -373,7 +374,7 @@ ipcMain.handle("obtener-top3-jugador", async (_, username) => {
         const datosPokemons = [];
         for (const p of pokemonList) {
             const datos = await obtenerDatosPokemon(p.id);
-            if (datos !== null) {
+            if (datos) {
                 datosPokemons.push(datos);
             }
         }
@@ -394,7 +395,7 @@ ipcMain.handle("obtener-top3-jugador", async (_, username) => {
         if (conteoPokemons.length === 0) {
             return { error: "No hay datos suficientes para calcular el top 3." };
         }
-        
+
         //retornamos las 3 primeras posiciones
         return conteoPokemons.slice(0, 3);
     } catch (error) {
