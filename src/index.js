@@ -273,7 +273,7 @@ ipcMain.on("open-stats", () => {
             },
         });
         statsWindow.loadFile(path.join(__dirname, "stats.html"));
-        statsWindow.webContents.openDevTools();
+        //statsWindow.webContents.openDevTools();
 
         statsWindow.on("closed", () => {
             statsWindow = null;
@@ -336,7 +336,7 @@ ipcMain.handle("obtener-tipos-151", async () => {
 ipcMain.handle("obtener-top3-jugador", async (_, username) => {
     try {
         const equipos = await obtenerEquiposDeUsuario(username);
-        if (!equipos || Object.keys(equipos).length === 0) {
+        if (!equipos){
             return { error: "El usuario no tiene equipos registrados." };
         }
 
