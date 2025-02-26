@@ -7,66 +7,36 @@
     <title>Document</title>
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
             color: #333;
             text-align: center;
             margin: 20px;
         }
 
-        h1 {
-            color: #ff5733;
-            text-transform: uppercase;
-            font-size: 24px;
-        }
-
         button {
-            background: linear-gradient(45deg, #ff5733, #ff914d);
+            background: #007bff;
             border: none;
             color: white;
-            padding: 10px 20px;
+            padding: 10px 15px;
             margin: 10px;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            border-radius: 5px;
         }
 
         button:hover {
-            background: linear-gradient(45deg, #ff914d, #ff5733);
-            transform: scale(1.05);
+            background: #0056b3;
         }
 
         #contenedorDatos {
             margin-top: 20px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
             background: white;
-            display: none;
-            /* Se oculta al inicio */
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s ease;
-        }
-
-        #contenedorDatos.mostrar {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            background: #ffeadb;
-            margin: 5px;
-            padding: 10px;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            font-weight: bold;
+            display: none;
+            /* Oculto al inicio */
         }
 
         table {
@@ -77,22 +47,19 @@
 
         th,
         td {
-            padding: 10px;
-            border: 1px solid #ddd;
+            padding: 8px;
+            border: 1px solid #ccc;
+            text-align: center;
         }
 
         th {
-            background: #ff5733;
+            background: #007bff;
             color: white;
-            text-transform: uppercase;
+            cursor: pointer;
         }
 
-        td {
-            background: #fff5f0;
-        }
-
-        tr:nth-child(even) td {
-            background: #ffe0cc;
+        tr:nth-child(even) {
+            background: #f2f2f2;
         }
     </style>
 </head>

@@ -329,7 +329,7 @@ ipcMain.handle("obtener-tipos-151", async () => {
         conteoTipos[tipoData.tipo] = tipoData.cantidad;
     }
 
-    return Object.entries(conteoTipos).map(([tipo, cantidad]) => ({ tipo, cantidad }));
+    return Object.entries(conteoTipos).map(([tipo, cantidad]) => ({ tipo, cantidad })).sort((a, b) => b.cantidad - a.cantidad);;
 });
 
 ipcMain.handle("obtener-top3-jugador", async (_, username) => {
@@ -394,6 +394,7 @@ ipcMain.handle("obtener-top3-jugador", async (_, username) => {
 });
 
 ipcMain.handle("obtener-tipos-jugador", async (_, username) => {
+
     const tiposPosibles = [
         "normal", "fire", "water", "electric", "grass", "ice",
         "fighting", "poison", "ground", "flying", "psychic",
@@ -439,7 +440,6 @@ ipcMain.handle("obtener-tipos-jugador", async (_, username) => {
         }))
         .toArray();
 
-    // Se crea un objeto donde cada tipo empieza con 0.
     const conteoTipos = Object.fromEntries(tiposPosibles.map(tipo => [tipo, 0]));
 
     // Llenar el conteo con los datos reales
@@ -449,6 +449,6 @@ ipcMain.handle("obtener-tipos-jugador", async (_, username) => {
 
     // Convertir a array para mostrarlo en formato tabla
     const tiposFinal = Object.entries(conteoTipos).map(([tipo, cantidad]) => ({ tipo, cantidad }));
-    return tiposFinal;
+    return tiposFinal.sort((a, b) => b.cantidad - a.cantidad);
 
 });
