@@ -15,8 +15,8 @@ Una aplicación de Pokédex creada con Electron, Axios y data-forge.js que muest
 - **Electron**: Para la creación de la aplicación de escritorio.
 - **Axios**: Para realizar llamadas a la PokéAPI.
 - **PokéAPI**: Fuente de datos para los Pokémon.
-- **data-forge.js**: Para análisis y manipulación de datos.
-- **firebase**: Guardar datos de los usuarios
+- **Data-forge.js**: Para análisis y manipulación de datos.
+- **Firebase**: Guardar datos de los usuarios
 
 ## Instalación y ejecución
 
