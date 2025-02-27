@@ -8,14 +8,14 @@ const sidebarDivs = document.querySelectorAll(".sidebar div");
 
 // Cargar la lista de Pokémon
 async function loadPokemonList() {
-  allPokemon = await window.electronAPI.fetchPokemonList(); // Guardamos la lista original
-  renderPokemonList(allPokemon); // Mostramos todos al inicio
+  allPokemon = await window.electronAPI.fetchPokemonList();
+  renderPokemonList(allPokemon);
 }
 
 // Renderizar la lista de Pokémon
 function renderPokemonList(pokemonList) {
   const listContainer = document.getElementById("pokemon-list");
-  listContainer.innerHTML = ""; // Limpiar lista
+  listContainer.innerHTML = ""; 
 
   for (let pokemon of pokemonList) {
     const pokeId = pokemon.url.split("/").slice(-2, -1)[0]; // Extrae el ID
@@ -44,7 +44,6 @@ function renderPokemonList(pokemonList) {
 
     // Agregar evento para abrir detalles
     listItem.addEventListener("click", () => {
-
       console.log("Abriendo detalles de:", pokemon.name);
       window.electronAPI.openDetailsWindow(pokemon.name);
     });
